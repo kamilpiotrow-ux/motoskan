@@ -94,7 +94,7 @@ function HomePage() {
     const WORKER_URL = 'https://motoskan-jobs.kamilpiotrow.workers.dev';
 
     // ⚠️ FAZA 5: Podmień ten URL na nowy webhook z self-hosted n8n
-    const WEBHOOK_URL = 'https://TWOJ-N8N.motoskan.pl/webhook/WEBHOOK-ID-Z-N8N';
+    const WEBHOOK_URL = 'https://n8n.motoskan.pl/webhook/motoskan';
 
     const jobId = 'job_' + btoa(url.trim()).replace(/[^a-z0-9]/gi, '');
 
