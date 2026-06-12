@@ -2,6 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 function TermsPage() {
   return (
@@ -12,12 +13,15 @@ function TermsPage() {
       </Helmet>
 
       <div className="min-h-screen bg-background">
-        <header className="border-b border-border bg-white">
+        <header className="border-b border-border bg-card">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <Link to="/" className="inline-flex items-center gap-2 text-foreground hover:text-primary transition-colors duration-200">
-              <ArrowLeft className="w-5 h-5" />
-              <span className="font-medium">Powrót do strony głównej</span>
-            </Link>
+            <div className="flex items-center justify-between gap-4">
+              <Link to="/" className="inline-flex items-center gap-2 text-foreground hover:text-primary transition-colors duration-200">
+                <ArrowLeft className="w-5 h-5" />
+                <span className="font-medium">Powrót do strony głównej</span>
+              </Link>
+              <ThemeToggle className="shrink-0" />
+            </div>
           </div>
         </header>
 

@@ -5,9 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2, Download, AlertCircle } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
+
+// ⚠️ Endpoint statystyk (liczniki analiz). Patrz: backend (Postgres + n8n) — do potwierdzenia.
+const STATS_URL = 'https://n8n.motoskan.pl/webhook/motoskan-stats';
 
 function HomePage() {
   const [url, setUrl] = useState('');
+  const [stats, setStats] = useState(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
@@ -75,6 +80,25 @@ function HomePage() {
     }
     return () => clearInterval(timerRef.current);
   }, [isLoading]);
+
+  // Pobierz liczniki analiz przy wejściu na stronę
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(STATS_URL);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) setStats(data);
+      } catch (e) {
+        // cichy fallback — liczniki pokażą "—"
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const formatCount = (n) =>
+    typeof n === 'number' ? n.toLocaleString('pl-PL') : '—';
 
   const formatTime = (tenths) => {
     const totalSeconds = Math.floor(tenths / 10);
@@ -246,20 +270,54 @@ function HomePage() {
   return (
     <>
       <Helmet>
-        <title>MotoSkan – Co wiadomo o aucie z tego ogłoszenia?</title>
+        <title>MotoSkan – Co powinieneś wiedzieć o danym aucie?</title>
         <meta name="description" content="Analizuj ogłoszenia samochodowe przed zakupem. Sprawdź stan techniczny, cenę i historię pojazdu." />
       </Helmet>
 
       <div className="min-h-screen bg-background">
-        <header className="border-b border-border bg-white no-print">
+        {/* Pasek liczników — renderuje się dopiero, gdy endpoint statystyk zwróci dane.
+            Dopóki backendu nie ma, pasek jest niewidoczny (zero "—" dla userów). */}
+        {stats && (
+          <div className="no-print border-b border-border bg-background">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div className="text-sm sm:text-base text-muted-foreground">
+                  Liczba analiz dzisiaj:{' '}
+                  <span className="font-bold text-[#00C0C5]">{formatCount(stats.today)}</span>
+                </div>
+                <div className="text-sm sm:text-base text-muted-foreground">
+                  Liczba analiz w tym miesiącu:{' '}
+                  <span className="font-bold text-[#00C0C5]">{formatCount(stats.month)}</span>
+                </div>
+                <div className="text-sm sm:text-base text-muted-foreground">
+                  Liczba analiz od początku:{' '}
+                  <span className="font-bold text-[#00C0C5]">{formatCount(stats.total)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <header className="border-b border-border bg-card no-print">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <img
-              src="/white_2.png"
-              alt="MotoSkan"
-              className="h-24 md:h-32 mb-4 object-contain"
-            />
+            <div className="flex items-start justify-between gap-4">
+              <img
+                src="/white_2.png"
+                alt="MotoSkan"
+                className="h-24 md:h-32 mb-4 object-contain dark:hidden"
+              />
+              <img
+                src="/white_2_dark.png"
+                alt="MotoSkan"
+                className="h-24 md:h-32 mb-4 object-contain hidden dark:block"
+              />
+              <ThemeToggle className="shrink-0" />
+            </div>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-[#052B52] dark:text-[#8FB4E0] mb-2">
+              [wersja beta - live]
+            </h1>
             <p className="text-lg text-muted-foreground">
-              Co wiadomo o aucie z tego ogłoszenia?
+              Co powinieneś wiedzieć o danym aucie?
             </p>
           </div>
         </header>
@@ -366,6 +424,15 @@ function HomePage() {
                     >
                       Analizuj ogłoszenie
                     </Button>
+
+                    <p className="text-center mt-4">
+                      <a
+                        href="mailto:kontakt@motoskan.pl"
+                        className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+                      >
+                        Masz uwagi? Napisz!
+                      </a>
+                    </p>
                   </div>
                 </TabsContent>
 
@@ -445,7 +512,7 @@ function HomePage() {
                   {parsedData.tiles.map((cat, idx) => {
                     const risk = getRiskDetails(cat.rating);
                     return (
-                      <div key={idx} className="bg-white border border-border rounded-xl p-5 shadow-sm">
+                      <div key={idx} className="bg-card border border-border rounded-xl p-5 shadow-sm">
                         <div className="flex items-center gap-2 mb-3">
                           <span className={`report-dot report-dot-${risk.colorClass}`}></span>
                           <h3 className="font-semibold text-foreground">{cat.name}</h3>

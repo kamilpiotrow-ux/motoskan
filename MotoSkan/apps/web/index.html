@@ -4,8 +4,37 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/white_1.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Analizuj ogłoszenia samochodowe z OtoMoto przed zakupem. Raport AI o stanie technicznym, historii i cenie pojazdu." />
-    <title>MotoSkan – Co wiadomo o aucie z tego ogłoszenia?</title>
+
+    <title>MotoSkan – Co powinieneś wiedzieć o danym aucie?</title>
+    <meta name="description" content="Analizuj ogłoszenia samochodowe z OtoMoto przed zakupem. Darmowy raport AI na temat modelu auta z ogłoszenia." />
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://motoskan.pl/" />
+    <meta property="og:title" content="MotoSkan – Co powinieneś wiedzieć o danym aucie?" />
+    <meta property="og:description" content="Analizuj ogłoszenia samochodowe z OtoMoto przed zakupem. Darmowy raport AI na temat modelu auta z ogłoszenia." />
+    <meta property="og:image" content="https://motoskan.pl/white_1.png" />
+    <meta property="og:locale" content="pl_PL" />
+    <meta property="og:site_name" content="MotoSkan" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="MotoSkan – Co powinieneś wiedzieć o danym aucie?" />
+    <meta name="twitter:description" content="Analizuj ogłoszenia samochodowe z OtoMoto przed zakupem. Darmowy raport AI na temat modelu auta z ogłoszenia." />
+    <meta name="twitter:image" content="https://motoskan.pl/white_1.png" />
+
+    <!-- Motyw: ustaw klasę .dark PRZED renderem, żeby uniknąć mignięcia (FOUC) -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('motoskan-theme');
+          if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
   </head>
   <body>
